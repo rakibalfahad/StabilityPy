@@ -15,18 +15,16 @@ from stability_selection.randomized_lasso import RandomizedLasso
 def test_stability_selection_classification():
     """Test StabilitySelection on a classification task."""
     # Generate data
-    X, y = make_classification(n_samples=200, n_features=50, n_informative=5, 
+    X, y = make_classification(n_samples=200, n_features=50, n_informative=5,
                              n_redundant=5, random_state=42)
-    
     # Create a pipeline
     base_estimator = Pipeline([
         ('scaler', StandardScaler()),
         ('model', LogisticRegression(penalty='l1', solver='liblinear'))
     ])
-    
     # Run stability selection
     selector = StabilitySelection(
-        base_estimator=base_estimator, 
+        base_estimator=base_estimator,
         lambda_name='model__C',
         lambda_grid=np.logspace(-5, -1, 10),
         n_bootstrap_iterations=20,  # Less iterations for faster testing

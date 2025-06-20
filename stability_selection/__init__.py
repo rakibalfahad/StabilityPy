@@ -9,7 +9,7 @@ from .bootstrap import (bootstrap_without_replacement,
                         complementary_pairs_bootstrap,
                         stratified_bootstrap)
 from .randomized_lasso import (RandomizedLogisticRegression,
-                             RandomizedLasso)
+                              RandomizedLasso)
 from .stability_selection import StabilitySelection, plot_stability_path
 
 __all__ = ['StabilitySelection',
