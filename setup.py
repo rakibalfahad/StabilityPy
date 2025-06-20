@@ -4,6 +4,17 @@ from setuptools import setup, find_packages
 with open('requirements.txt') as f:
     INSTALL_REQUIRES = [l.strip() for l in f.readlines() if l]
 
+# Development dependencies
+DEV_REQUIRES = [
+    "black",
+    "flake8",
+    "isort",
+    "pre-commit",
+    "pytest>=7.0.0",
+    "pytest-cov>=4.1.0",
+    "pycodestyle",
+]
+
 try:
     import numpy
 except ImportError:
@@ -23,6 +34,9 @@ setup(
     author='Updated from Thomas Huijskens original',
     packages=find_packages(),
     install_requires=INSTALL_REQUIRES,
+    extras_require={
+        'dev': DEV_REQUIRES,
+    },
     python_requires='>=3.8',
     classifiers=[
         'Development Status :: 4 - Beta',

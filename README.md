@@ -1,4 +1,4 @@
-# Stability Selection
+# StabilityPy
 
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](LICENSE)
 
@@ -27,22 +27,26 @@ In the randomized LASSO variant, the penalty term for each feature is randomly s
 
 ## Installation
 
-To install the module, clone the repository:
+### From PyPI (Recommended)
 
 ```bash
-git clone https://github.com/yourusername/stability-selection.git
+pip install stability-selection
 ```
 
-Before installing the module, install the requirements:
+### From Source
+
+To install the latest development version:
 
 ```bash
-pip install -r requirements.txt
+git clone https://github.com/yourusername/StabilityPy.git
+cd StabilityPy
+pip install -e .
 ```
 
-Then install the module:
+For development, install with development dependencies:
 
 ```bash
-python setup.py install
+pip install -e ".[dev]"
 ```
 
 ## Features
@@ -81,36 +85,30 @@ selector = StabilitySelection(
 
 # Fit the selector to your data
 selector.fit(X, y)
-
-# Get the selected features
-selected_features = selector.get_support(indices=True)
-
-# Transform your data to include only selected features
-X_selected = selector.transform(X)
 ```
 
 ### Advanced Example with Visualizations
 
-The package includes a comprehensive example script that:
-1. Generates synthetic data with interdependent features based on popular equations
-2. Applies stability selection to identify the relevant features
-3. Creates visualizations similar to those in the original paper
-
-To run this example:
+The package includes comprehensive example scripts that demonstrate various use cases:
 
 ```bash
+# Basic stability selection example
+python examples/stability_selection_example.py
+
+# Example with GPU acceleration
+python examples/gpu_acceleration_example.py
+
+# Example with synthetic data visualization
 python examples/synthetic_data_visualization.py
 ```
 
-This will generate several visualizations:
-- Stability paths (as shown in the original paper)
-- Histogram of stability scores
-- Correlation heatmap of selected features
-- Comparison of true vs. selected features
+The stability selection example will generate a visualization of stability paths:
 
-![Stability Paths Example](stability_paths_paper_style.png)
+![Stability Paths Example](stability_path.png)
 
-## GPU Acceleration Example
+## GPU Acceleration
+
+StabilityPy provides GPU acceleration via PyTorch for faster computation, especially useful for large datasets:
 
 ```python
 from stability_selection import StabilitySelection, RandomizedLasso
@@ -122,11 +120,50 @@ selector = StabilitySelection(
     lambda_name='alpha',
     lambda_grid=np.linspace(0.001, 0.5, num=100),
     threshold=0.9,
-    use_gpu=True,
-    n_jobs=-1
+    use_gpu=True,  # Enable GPU acceleration
+    n_jobs=-1  # Use all CPU cores for operations that can't be GPU accelerated
 )
 selector.fit(X, y)
 ```
+
+## Development
+
+The project follows standard Python development practices with tools for code quality and testing.
+
+### Development Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/StabilityPy.git
+cd StabilityPy
+
+# Install in development mode with dev dependencies
+pip install -e ".[dev]"
+
+# Install pre-commit hooks
+pre-commit install
+```
+
+### Code Quality Tools
+
+We use several tools to maintain code quality:
+
+```bash
+# Format code
+black stability_selection examples --line-length=100
+isort stability_selection examples
+
+# Lint code
+flake8 stability_selection examples --max-line-length=100
+
+# Run tests
+pytest stability_selection/tests
+
+# Run tests with coverage
+pytest --cov=stability_selection --cov-report=term
+```
+
+For more details, see the [Development Guide](DEVELOPMENT.md) and [Standardization Summary](STANDARDIZATION.md).
 
 ## References
 
@@ -134,10 +171,22 @@ selector.fit(X, y)
 
 [2] Shah, R.D. and Samworth, R.J. (2013). Variable selection with error control: another look at stability selection. Journal of the Royal Statistical Society: Series B (Statistical Methodology), 75(1), pp.55-80.
 
+## Requirements
+
+- Python 3.8+
+- NumPy >= 1.24.0
+- SciPy >= 1.11.0
+- scikit-learn >= 1.3.0
+- PyTorch >= 2.0.0 (optional, for GPU acceleration)
+- joblib >= 1.3.0
+- tqdm >= 4.65.0
+- matplotlib >= 3.7.0 (for visualization)
+- seaborn >= 0.12.0 (for visualization)
+
 ## License
 
 This project is licensed under the BSD 3-Clause License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
-This project is a modernized version of the original stability-selection package by Thomas Huijskens, with added features for GPU acceleration and improved parallel processing.
+This project is a modernized version of the original stability-selection package by Thomas Huijskens, with added features for GPU acceleration, improved parallel processing, and standardized code quality.

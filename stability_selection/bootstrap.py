@@ -144,7 +144,7 @@ def stratified_bootstrap(y, n_subsamples, random_state=None):
 def parallel_bootstrap_samples(n_bootstrap_iterations, bootstrap_func, y, n_subsamples, random_state=None, n_jobs=1):
     """
     Generate bootstrap samples in parallel.
-    
+
     Parameters
     ----------
     n_bootstrap_iterations : int

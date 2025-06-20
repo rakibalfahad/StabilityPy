@@ -64,7 +64,7 @@ class RandomizedLogisticRegression(LogisticRegression):
     ----------
     weakness : float
         Weakness value for randomized LASSO. Must be in (0, 1].
-        
+
     use_gpu : bool, default=False
         Whether to use GPU acceleration if available.
 

@@ -39,8 +39,10 @@ except ImportError:
     TORCH_AVAILABLE = False
     warnings.warn("PyTorch is not available. GPU acceleration will be disabled.")
 
-from .bootstrap import (bootstrap_without_replacement, complementary_pairs_bootstrap, 
-                      stratified_bootstrap, parallel_bootstrap_samples)
+from .bootstrap import (
+    bootstrap_without_replacement, complementary_pairs_bootstrap,
+    stratified_bootstrap, parallel_bootstrap_samples
+)
 
 __all__ = ['StabilitySelection', 'plot_stability_path']
 
@@ -269,10 +271,10 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
            of the Royal Statistical Society: Series B (Statistical Methodology),
             75(1), pp.55-80.
     """
-    def __init__(self, base_estimator=LogisticRegression(penalty='l1', solver='liblinear'), 
-                 lambda_name='C', lambda_grid=np.logspace(-5, -2, 25), 
-                 n_bootstrap_iterations=100, sample_fraction=0.5, threshold=0.6, 
-                 bootstrap_func=bootstrap_without_replacement, bootstrap_threshold=None, 
+    def __init__(self, base_estimator=LogisticRegression(penalty='l1', solver='liblinear'),
+                 lambda_name='C', lambda_grid=np.logspace(-5, -2, 25),
+                 n_bootstrap_iterations=100, sample_fraction=0.5, threshold=0.6,
+                 bootstrap_func=bootstrap_without_replacement, bootstrap_threshold=None,
                  verbose=0, n_jobs=1, pre_dispatch='2*n_jobs', random_state=None,
                  use_gpu=False, batch_size=None):
         self.base_estimator = base_estimator
@@ -352,17 +354,17 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
         # Set progress bar
         use_tqdm = self.verbose > 0
         lambda_iter = tqdm(enumerate(self.lambda_grid), total=n_lambdas, desc="Fitting models") if use_tqdm else enumerate(self.lambda_grid)
-        
+
         for idx, lambda_value in lambda_iter:
             if self.verbose > 0 and not use_tqdm:
                 print(f"Fitting estimator for lambda = {lambda_value:.5f} ({idx + 1} / {n_lambdas}) on {self.n_bootstrap_iterations} bootstrap samples")
-            
+
             # Generate bootstrap samples in parallel
             bootstrap_samples = parallel_bootstrap_samples(
                 self.n_bootstrap_iterations,
-                self.bootstrap_func, 
+                self.bootstrap_func,
                 y,
-                n_subsamples, 
+                n_subsamples,
                 random_state=random_state,
                 n_jobs=self.n_jobs if self.n_jobs > 1 else 1
             )
