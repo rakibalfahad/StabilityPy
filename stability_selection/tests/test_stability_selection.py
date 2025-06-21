@@ -115,13 +115,13 @@ def test_get_support():
     support = selector.get_support()
     assert support[0]  # Feature 0 should be selected
     assert support[1]  # Feature 1 should be selected
-    assert not support[2:]  # Other features should not be selected
+    assert not np.any(support[2:])  # Other features should not be selected
     
     # Test custom threshold
     support = selector.get_support(threshold=0.85)
     assert support[0]  # Feature 0 should be selected
     assert not support[1]  # Feature 1 should not be selected
-    assert not support[2:]  # Other features should not be selected
+    assert not np.any(support[2:])  # Other features should not be selected
     
     # Test indices
     indices = selector.get_support(indices=True)

@@ -291,6 +291,24 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
         self.random_state = random_state
         self.use_gpu = use_gpu
         self.batch_size = batch_size
+        
+        # Validate input during initialization
+        if not isinstance(n_bootstrap_iterations, int) or n_bootstrap_iterations <= 0:
+            raise ValueError('n_bootstrap_iterations should be a positive integer, got %s' %
+                             n_bootstrap_iterations)
+
+        if not isinstance(sample_fraction, float) or not (0.0 < sample_fraction <= 1.0):
+            raise ValueError('sample_fraction should be a float in (0, 1], got %s' % sample_fraction)
+
+        if not isinstance(threshold, float) or not (0.0 < threshold <= 1.0):
+            raise ValueError('threshold should be a float in (0, 1], got %s' % threshold)
+            
+        # Validate bootstrap_func
+        if isinstance(bootstrap_func, str):
+            if bootstrap_func not in BOOTSTRAP_FUNC_MAPPING.keys():
+                raise ValueError('bootstrap_func is set to %s, but must be one of '
+                                 '%s or a callable' %
+                                 (bootstrap_func, BOOTSTRAP_FUNC_MAPPING.keys()))
 
     def _validate_input(self):
         if not isinstance(self.n_bootstrap_iterations, int) or self.n_bootstrap_iterations <= 0:

@@ -4,6 +4,12 @@ from setuptools import setup, find_packages
 with open('requirements.txt') as f:
     INSTALL_REQUIRES = [l.strip() for l in f.readlines() if l]
 
+# Ensure numpy and scipy are in the install_requires
+if 'numpy' not in INSTALL_REQUIRES:
+    INSTALL_REQUIRES.append('numpy>=1.20.0')
+if 'scipy' not in INSTALL_REQUIRES:
+    INSTALL_REQUIRES.append('scipy>=1.7.0')
+
 # Development dependencies
 DEV_REQUIRES = [
     "black",
@@ -15,17 +21,10 @@ DEV_REQUIRES = [
     "pycodestyle",
 ]
 
-try:
-    import numpy
-except ImportError:
-    print('numpy is required during installation')
-    sys.exit(1)
-
-try:
-    import scipy
-except ImportError:
-    print('scipy is required during installation')
-    sys.exit(1)
+# GPU acceleration dependencies
+GPU_REQUIRES = [
+    "torch>=1.7.0",
+]
 
 setup(
     name='stability-selection',
@@ -34,8 +33,11 @@ setup(
     author='Updated from Thomas Huijskens original',
     packages=find_packages(),
     install_requires=INSTALL_REQUIRES,
+    setup_requires=['numpy>=1.20.0', 'scipy>=1.7.0'],  # Required during setup
     extras_require={
         'dev': DEV_REQUIRES,
+        'gpu': GPU_REQUIRES,
+        'all': DEV_REQUIRES + GPU_REQUIRES,
     },
     python_requires='>=3.8',
     classifiers=[
