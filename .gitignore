@@ -143,3 +143,8 @@ ehthumbs.db
 
 # Generated files
 stability_path.png
+
+# Results and data directories
+/results/
+/data/
+*.pkl

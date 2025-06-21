@@ -49,6 +49,12 @@ For development, install with development dependencies:
 pip install -e ".[dev]"
 ```
 
+For GPU acceleration, install with GPU dependencies:
+
+```bash
+pip install -e ".[gpu]"
+```
+
 ## Features
 
 - **GPU Acceleration**: Uses PyTorch for GPU-accelerated computations when available
@@ -58,6 +64,16 @@ pip install -e ".[dev]"
   - Complementary pairs subsampling
   - Stratified bootstrapping for imbalanced classification
 - **Scikit-learn Compatible**: Works with scikit-learn pipelines and cross-validation
+- **CSV/CSV.GZ Processing**: Direct support for tabular data formats
+- **Automated Feature Selection**: Process tabular data and visualize results with a single command
+- **Model Fine-tuning**: Automatically fine-tune models with selected features and compare to baselines
+- **Synthetic Data Generation**: Generate controlled datasets for testing and benchmarking
+
+## Documentation
+
+- [API Reference](doc/api_reference.md)
+- [GPU Acceleration](doc/gpu_acceleration.md)
+- [Theory and Implementation](blog/stability_selection_theory.md)
 
 ## Example Usage
 
@@ -85,6 +101,40 @@ selector = StabilitySelection(
 
 # Fit the selector to your data
 selector.fit(X, y)
+
+# Get selected features
+selected_features = selector.get_support(indices=True)
+```
+
+### Data Processing and Analysis
+
+StabilityPy now includes a comprehensive script for processing tabular data and running the full stability selection workflow:
+
+```bash
+# For classification problems
+python stability_processor.py --input data.csv --output results_dir --problem_type classification
+
+# For regression problems
+python stability_processor.py --input data.csv.gz --output results_dir --problem_type regression --use_gpu
+```
+
+The script will:
+1. Load and preprocess your data
+2. Run stability selection to identify important features
+3. Fine-tune a model using only the selected features
+4. Compare performance with a baseline model using all features
+5. Generate visualizations and save all results to the output directory
+
+### Synthetic Data Generation
+
+You can generate synthetic datasets with controlled properties using the included generator:
+
+```bash
+# Generate a classification dataset
+python synthetic_data_generator.py --output data.csv --problem_type classification --n_samples 1000 --n_features 100 --n_informative 10
+
+# Generate a compressed regression dataset
+python synthetic_data_generator.py --output data.csv.gz --problem_type regression --n_samples 2000 --n_features 500 --n_informative 20 --compress
 ```
 
 ### Advanced Example with Visualizations
@@ -102,9 +152,45 @@ python examples/gpu_acceleration_example.py
 python examples/synthetic_data_visualization.py
 ```
 
-The stability selection example will generate a visualization of stability paths:
+### Complete Workflow Example
 
-![Stability Paths Example](stability_path.png)
+Here's a complete workflow from data generation to model fine-tuning:
+
+```bash
+# 1. Generate synthetic data
+python synthetic_data_generator.py \
+    --output data/synthetic_classification.csv \
+    --problem_type classification \
+    --n_samples 1000 \
+    --n_features 100 \
+    --n_informative 10 \
+    --noise 0.1
+
+# 2. Run stability selection with fine-tuning
+python stability_processor.py \
+    --input data/synthetic_classification.csv \
+    --output results/synthetic_classification \
+    --problem_type classification \
+    --n_bootstrap 100 \
+    --use_gpu
+```
+
+## Output Files and Visualizations
+
+The `stability_processor.py` script produces a comprehensive set of outputs:
+
+- **selected_features.csv**: CSV file with selected features and their stability scores
+- **feature_importance.csv**: Feature importances from the fine-tuned model
+- **performance_metrics.csv**: Performance comparison between selected features and all features
+- **stability_selection_results.pkl**: Pickled results object with all stability scores
+- **fine_tuned_model.pkl**: Trained model using only selected features
+- **baseline_model.pkl**: Trained model using all features
+
+Visualizations:
+- **stability_paths.png**: Plot of stability scores across regularization parameters
+- **stability_heatmap.png**: Heatmap of stability scores for top features
+- **performance_comparison.png**: Bar chart comparing model performance
+- **feature_importance.png**: Bar chart of feature importances from fine-tuned model
 
 ## GPU Acceleration
 
@@ -174,14 +260,14 @@ For more details, see the [Development Guide](DEVELOPMENT.md) and [Standardizati
 ## Requirements
 
 - Python 3.8+
-- NumPy >= 1.24.0
-- SciPy >= 1.11.0
-- scikit-learn >= 1.3.0
-- PyTorch >= 2.0.0 (optional, for GPU acceleration)
-- joblib >= 1.3.0
-- tqdm >= 4.65.0
-- matplotlib >= 3.7.0 (for visualization)
-- seaborn >= 0.12.0 (for visualization)
+- NumPy >= 1.20.0
+- SciPy >= 1.7.0
+- scikit-learn >= 1.0.0
+- PyTorch >= 1.10.0 (optional, for GPU acceleration)
+- joblib >= 1.0.0
+- tqdm >= 4.60.0
+- matplotlib >= 3.3.0 (for visualization)
+- seaborn >= 0.11.0 (for visualization)
 
 ## License
 
