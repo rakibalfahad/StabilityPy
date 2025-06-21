@@ -73,7 +73,7 @@ pip install -e ".[gpu]"
 
 - [API Reference](doc/api_reference.md)
 - [GPU Acceleration](doc/gpu_acceleration.md)
-- [Theory and Implementation](blog/stability_selection_theory.md)
+- [Feature Selection Reinvented](blog/feature_selection_reinvented.md)
 
 ## Example Usage
 
